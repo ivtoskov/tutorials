@@ -146,6 +146,7 @@ trait DslGenC extends CGenNumericOps
   override def remap[A](m: Typ[A]): String = m.toString match {
     case "java.lang.String" => "char*"
     case "Array[Char]" => "char*"
+    case "Array[Int]" => "int32_t*"
     case "Char" => "char"
     case _ => super.remap(m)
   }
@@ -176,6 +177,7 @@ trait DslGenC extends CGenNumericOps
     tpe match {
       case "char*" => true
       case "char" => true
+      case "int32_t*" => true
       case _ => super.isPrimitiveType(tpe)
     }
   }
