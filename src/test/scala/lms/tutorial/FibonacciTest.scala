@@ -1,5 +1,7 @@
 package scala.lms.tutorial
 
+import lms.tutorial.{Fibonacci, FibonacciCodeGen, FibonacciImpl}
+
 import scala.lms.common._
 
 /**
@@ -31,5 +33,11 @@ class FibonacciTest extends TutorialFunSuite {
     }
 
     check("dslapi-version", snippet.code, "c")
+  }
+
+  test("separate-version") {
+    val fibFunc = new FibonacciImpl().code
+    println(indent(fibFunc))
+    println("weird test done")
   }
 }
