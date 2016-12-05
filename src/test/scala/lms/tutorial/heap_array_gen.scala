@@ -2,15 +2,24 @@ package lms.tutorial
 
 import scala.lms.common._
 
-/**
-  * A simple class that encapsulates the IR of heap arrays.
-  *
-  * @author Ivaylo Toskov (itoskov@student.ethz.ch)
-  */
-
-class FibonacciImpl extends Fibonacci { q =>
+class Fibonacci extends HeapArrayOpsExp { q =>
   val codegen = new FibonacciCodeGen {
     val IR: q.type = q
+  }
+
+  def fib(n: Rep[Int]) = {
+    val arr = NewHeapArray[Int](n)
+
+    if (n > 0)
+      arr(0) = 0
+
+    if (n > 1)
+      arr(1) = 1
+
+    for (i <- (2 until n): Rep[Range]) {
+      arr(i) = arr(i - 1) + arr(i - 2)
+    }
+    arr
   }
 
   lazy val code: String = {

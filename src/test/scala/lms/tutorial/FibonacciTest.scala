@@ -1,8 +1,6 @@
 package scala.lms.tutorial
 
-import lms.tutorial.{Fibonacci, FibonacciCodeGen, FibonacciImpl}
-
-import scala.lms.common._
+import lms.tutorial.Fibonacci
 
 /**
   * A simple test class to explore the different ways
@@ -36,7 +34,7 @@ class FibonacciTest extends TutorialFunSuite {
   }
 
   test("separate-version") {
-    val fibFunc = new FibonacciImpl().code
+    val fibFunc = new Fibonacci().code
     println(indent(fibFunc))
     println("weird test done")
   }

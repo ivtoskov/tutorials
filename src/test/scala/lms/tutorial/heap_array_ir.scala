@@ -1,9 +1,13 @@
 package lms.tutorial
 
 import scala.lms.common._
+import scala.lms.internal.Effects
 import scala.reflect.SourceContext
 
-trait HeapArrayOps extends Variables {
+trait HeapArrayOps extends Variables with Effects
+  with PrimitiveOps with LiftNumeric with IfThenElse
+  with OrderingOps with BooleanOps with RangeOps {
+
   implicit def repHeapArrayToHeapArrayOps[T:Typ](a: Rep[Array[T]]) : HeapArrayOpsCls[T] = new HeapArrayOpsCls(a)
 
   class HeapArrayOpsCls[T:Typ](a: Rep[Array[T]]) {
@@ -20,7 +24,10 @@ trait HeapArrayOps extends Variables {
   def heapArray_update[T:Typ](x: Rep[Array[T]], n: Rep[Int], y: Rep[T])(implicit pos: SourceContext): Rep[Unit]
 }
 
-trait HeapArrayOpsExp extends HeapArrayOps with EffectExp with VariablesExp {
+trait HeapArrayOpsExp extends HeapArrayOps with EffectExp with VariablesExp
+  with PrimitiveOpsExp with LiftNumeric with IfThenElseExp
+  with OrderingOpsExp with BooleanOpsExp with RangeOpsExp {
+
   case class HeapArrayNew[T:Typ](size: Exp[Int]) extends Def[Array[T]] {
     val m = manifest[T]
   }
@@ -37,21 +44,3 @@ trait HeapArrayOpsExp extends HeapArrayOps with EffectExp with VariablesExp {
   def heapArray_apply[T:Typ](arr: Exp[Array[T]], index: Exp[Int])(implicit pos: SourceContext): Exp[T] = HeapArrayApply(arr, index)
   def heapArray_update[T:Typ](arr: Exp[Array[T]], index: Exp[Int], elem: Exp[T])(implicit pos: SourceContext) = reflectWrite(arr)(HeapArrayUpdate(arr,index,elem))
 }
-
-trait Fibonacci extends HeapArrayOpsExp with PrimitiveOpsExp with LiftNumeric with IfThenElseExp with OrderingOpsExp with BooleanOpsExp with RangeOpsExp {
-  def fib(n: Rep[Int]) = {
-    val arr = NewHeapArray[Int](n)
-
-    if (n > 0)
-      arr(0) = 0
-
-    if (n > 1)
-      arr(1) = 1
-
-    for (i <- (2 until n): Rep[Range]) {
-      arr(i) = arr(i - 1) + arr(i - 2)
-    }
-    arr
-  }
-}
-
